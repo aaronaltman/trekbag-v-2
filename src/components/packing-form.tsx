@@ -1,25 +1,15 @@
-import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+"use client";
+import { useFormState } from "react-dom";
+import * as actions from "@/actions";
 
 export default function PackingForm() {
-  async function createItem(formData: FormData) {
-    // User Server
-    "use server";
-    // Get the label from the form
-    const label = formData.get("label") as string;
-    const isPacked = false;
+  const [formState, action] = useFormState(actions.createItem, {
+    label: "",
+    packed: false,
+  });
 
-    // Create a new item in the database
-    const item = await db.packingList.create({
-      data: {
-        label,
-        isPacked,
-      },
-    });
-    redirect("/");
-  }
   return (
-    <form action={createItem}>
+    <form action={action}>
       <h3>Pack an Item</h3>
       <input
         id="label"
